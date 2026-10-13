@@ -9,3 +9,4 @@ databricks_host: https://adb-7405617327453018.18.azuredatabricks.net
 databricks_job_id: null  # Supply the saved successful job ID locally.
 compute: serverless
 mysql_cloud_status: blocked
+taxi_ingestion_job_id: null  # A separate saved ingestion job, not the smoke-test job.

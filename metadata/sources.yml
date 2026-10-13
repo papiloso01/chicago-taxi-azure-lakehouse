@@ -1,23 +1,23 @@
 version: 1
 sources:
-  - name: taxi_trips
-    endpoint: https://data.cityofchicago.org/resource/ajtu-isnz.json
-    natural_key: trip_id
-    timezone: America/Chicago
-    initial_load: completed_calendar_year
-    daily_window: T-1
-    bounds: inclusive_start_exclusive_end
-    status: planned
-  - name: weather
-    endpoint: https://archive-api.open-meteo.com/v1/archive
-    natural_key: hour_utc
-    timezone: UTC
-    model: era5
-    delay_days: 5
-    overlap_days: 14
-    status: planned
-  - name: community_areas
-    endpoint: https://data.cityofchicago.org/resource/igwz-8jzy.json
-    natural_key: area_num_1
-    expected_records: 77
-    status: planned
+- name: taxi_trips
+  endpoint: https://data.cityofchicago.org/resource/ajtu-isnz.json
+  natural_key: trip_id
+  timezone: America/Chicago
+  initial_load: completed_calendar_year
+  daily_window: T-1
+  bounds: inclusive_start_exclusive_end
+  status: implemented_pending_cloud_test
+- name: weather
+  endpoint: https://archive-api.open-meteo.com/v1/archive
+  natural_key: hour_utc
+  timezone: UTC
+  model: era5
+  delay_days: 5
+  overlap_days: 14
+  status: planned
+- name: community_areas
+  endpoint: https://data.cityofchicago.org/resource/igwz-8jzy.json
+  natural_key: area_num_1
+  expected_records: 77
+  status: planned

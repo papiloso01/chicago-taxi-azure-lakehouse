@@ -1,4 +1,4 @@
 # Integration tests
 
-Planned scope: MySQL adapter, storage adapter and invocation boundaries.
-No passing coverage is claimed until executable tests are added.
+`test_landing_http.py` exercises HTTP pagination through a loopback fixture server into landing files.
+Azure, Spark and MySQL integration remain future suites; no real credentials are used.
