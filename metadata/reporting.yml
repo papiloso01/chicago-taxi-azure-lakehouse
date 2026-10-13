@@ -1,0 +1,10 @@
+version: 1
+status: planned
+rules:
+  vehicle_identity: Taxi IDs identify vehicles, not drivers.
+  revenue: Reported trip total in USD, not profit.
+  distance: Reported miles multiplied by 1.609344.
+  shortest_trip: Exclude zero distances from the shortest positive metric.
+  gender: Not available in source; do not infer.
+  weather: Modelled city-level weather; missing stays unavailable.
+  area_activity: Pickup and dropoff counted separately; summing both doubles activity counts.

@@ -218,3 +218,14 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Project-local credentials, output and tooling state
+.env
+config/dev.local.yml
+test-results/
+data/
+.databricks/
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
