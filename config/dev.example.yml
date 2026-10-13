@@ -1,0 +1,11 @@
+environment: dev
+region: uksouth
+resource_group: rg-chicago-taxi-dev
+storage_account: stchicagotaxidevul16
+catalog: chicago_taxi_dev
+landing_volume: /Volumes/chicago_taxi_dev/landing/raw_files
+adf_factory: adf-chicago-taxi-dev-ul16
+databricks_host: https://adb-7405617327453018.18.azuredatabricks.net
+databricks_job_id: null  # Supply the saved successful job ID locally.
+compute: serverless
+mysql_cloud_status: blocked
