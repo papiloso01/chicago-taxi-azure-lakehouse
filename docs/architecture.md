@@ -15,5 +15,6 @@ publication stages by run and validates before promoting; design transaction/rec
 with the actual publisher. No direct Spark overwrite of live dashboard tables.
 
 Use offline fixtures in CI. Cloud acceptance tests are explicit manual/gated jobs with managed
-identities. The current functional suite covers date windows and metadata only. Rerun correctness,
+identities. The functional suite covers date windows, metadata, API pagination/retries and landing manifests.
+A loopback HTTP integration test exercises extraction into landing without cloud credentials. Rerun correctness,
 end-to-end ETL and annual-volume performance are pending implementation.

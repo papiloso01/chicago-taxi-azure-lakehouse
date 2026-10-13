@@ -1,7 +1,7 @@
 # Implementation roadmap
 
-1. Review/merge this foundation. Export validated ADF and saved job definitions.
-2. Implement bounded API extraction, landing manifests and completed-year/T−1 orchestration.
+1. Foundation merged and live ADF definitions imported.
+2. Taxi extraction and ADF orchestration implemented; review this PR, create the ingestion job and perform live acceptance. Weather/community ingestion remains pending.
 3. Implement bronze source-key MERGE and audit/watermark behaviour.
 4. Implement silver schemas, quarantine, facts/dimensions and contract checks.
 5. Implement gold marts and count/revenue reconciliation.

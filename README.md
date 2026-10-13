@@ -11,7 +11,8 @@ ADLS Gen2 / Delta Lake and a planned MySQL reporting database.
 | ADLS containers, external locations and Unity Catalog schemas | Created; file events disabled |
 | Serverless PySpark storage test | Passed directly in Databricks |
 | ADF invoking the saved serverless job | Passed |
-| API ingestion and bronze/silver/gold transformations | Next implementation phase |
+| Taxi API → landing | Implemented and tested offline; new serverless ingestion job/live source test pending |
+| Bronze/silver/gold transformations | Next implementation phase |
 | Azure MySQL Flexible Server | Blocked by region/subscription provisioning restrictions |
 | Local MySQL | Docker configuration provided; not yet verified on the owner's machine |
 | Dashboard and full-year backfill | Not implemented/run in this repo |
@@ -61,12 +62,12 @@ Serverless has its own managed environment; inspect its Python/Spark versions se
 python -m venv .venv
 .venv\Scripts\activate
 python -m pip install -e ".[test]"
-python -m pytest tests/functional -v
+python -m pytest tests/functional tests/integration -v
 python tools/validate_metadata.py
 ```
 
 No Azure credentials are needed for these checks. GitHub Actions and CircleCI run this foundation
-suite; future suites are explicitly planned, not represented as passing ETL coverage.
+suites; the integration suite uses a loopback HTTP fixture API. Delta ETL/E2E suites remain planned.
 
 ## Reporting limits
 
@@ -77,3 +78,8 @@ or weather is missing. Shortest-distance reporting excludes zero distances, reta
 
 Keep credentials and `.env` out of Git. Preserve PR review before merging. Code is MIT licensed;
 source data retains its provider terms.
+
+## Taxi API ingestion
+
+See [landing ingestion setup](docs/taxi_ingestion.md) for the serverless package, saved job,
+ADF parameters, raw manifests, reruns and live acceptance checks. No trigger is enabled.
