@@ -1,0 +1,23 @@
+{
+	"name": "ls_databricks_chicago_taxi_dev",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "AzureDatabricks",
+		"typeProperties": {
+			"domain": "https://adb-7405617327453018.18.azuredatabricks.net",
+			"authentication": "MSI",
+			"workspaceResourceId": "/subscriptions/71a302e4-a957-436d-9f5e-b2f63eca27c3/resourceGroups/rg-chicago-taxi-dev/providers/Microsoft.Databricks/workspaces/dbw-chicago-taxi-dev",
+			"newClusterNodeType": "Standard_D4ds_v5",
+			"newClusterNumOfWorker": "1",
+			"newClusterSparkEnvVars": {
+				"PYSPARK_PYTHON": "/databricks/python3/bin/python3"
+			},
+			"newClusterVersion": "16.4.x-scala2.12",
+			"newClusterDriverNodeType": "Standard_D4s_v5",
+			"clusterOption": "Fixed",
+			"newClusterInitScripts": [],
+			"dataSecurityMode": "USER_ISOLATION"
+		}
+	}
+}

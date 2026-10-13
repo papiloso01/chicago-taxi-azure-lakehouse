@@ -1,0 +1,15 @@
+{
+	"name": "adf-chicago-taxi-dev-ul16",
+	"properties": {
+		"trustModeClaimForMi": {
+			"value": "Disabled",
+			"editable": true
+		}
+	},
+	"location": "uksouth",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "6ac95c94-a326-4306-80e2-0a6d9e2d5459",
+		"tenantId": "4679a4bc-34a2-4d9d-b120-56c3e021a7bf"
+	}
+}

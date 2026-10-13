@@ -1,0 +1,13 @@
+{
+	"name": "ls_databricks_serverless_dev",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "AzureDatabricks",
+		"typeProperties": {
+			"domain": "https://adb-7405617327453018.18.azuredatabricks.net",
+			"authentication": "MSI",
+			"workspaceResourceId": "/subscriptions/71a302e4-a957-436d-9f5e-b2f63eca27c3/resourceGroups/rg-chicago-taxi-dev/providers/Microsoft.Databricks/workspaces/dbw-chicago-taxi-dev"
+		}
+	}
+}

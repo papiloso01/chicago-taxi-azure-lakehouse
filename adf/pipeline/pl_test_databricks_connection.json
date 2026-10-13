@@ -1,0 +1,30 @@
+{
+	"name": "pl_test_databricks_connection",
+	"properties": {
+		"activities": [
+			{
+				"name": "test_catalog_and_storage",
+				"type": "DatabricksNotebook",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/Users/akintunde.akinsola@gmail.com/test_adf_storage_connection"
+				},
+				"linkedServiceName": {
+					"referenceName": "ls_databricks_chicago_taxi_dev",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2026-10-13T20:37:58Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
