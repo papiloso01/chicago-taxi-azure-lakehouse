@@ -11,6 +11,7 @@ dbutils.widgets.dropdown("mode", "daily", ["daily", "explicit", "backfill"])
 dbutils.widgets.text("start", "")
 dbutils.widgets.text("end", "")
 dbutils.widgets.text("year", "2025")
+dbutils.widgets.text("landing_run_id", "")
 dbutils.widgets.text("page_size", "5000")
 dbutils.widgets.text("landing_root", "/Volumes/chicago_taxi_dev/landing/raw_files")
 
@@ -31,7 +32,8 @@ landing_root = dbutils.widgets.get("landing_root")
 if not landing_root.startswith("/Volumes/"):
     raise ValueError("Cloud landing_root must be an absolute Unity Catalog volume path")
 report = ingest(landing_root, start, end,
-                page_size=int(dbutils.widgets.get("page_size")))
+                page_size=int(dbutils.widgets.get("page_size")),
+                run_id=dbutils.widgets.get("landing_run_id") or None)
 # Anonymous public API initially. Add a Key Vault-backed token only after secret access is configured.
 print(json.dumps({key: report[key] for key in ["run_id", "status", "extracted_rows", "start", "end_exclusive"]}))
 dbutils.notebook.exit(json.dumps({key: report[key] for key in ["run_id", "status", "extracted_rows"]}))
