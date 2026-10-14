@@ -91,3 +91,7 @@ See [bronze acceptance steps](docs/bronze_loading.md) for the explicit-schema De
 ## ADF handoff
 
 [Combined landing-to-bronze activation](docs/adf_bronze_handoff.md) uses one shared pipeline run identity for both saved serverless jobs. Individual cloud tests passed; combined live acceptance is pending.
+
+## Silver warehouse
+
+[Silver setup and validation](docs/silver_warehouse.md) builds typed trip facts, dimensions and quarantine records from a pinned bronze snapshot. Cloud acceptance remains pending.

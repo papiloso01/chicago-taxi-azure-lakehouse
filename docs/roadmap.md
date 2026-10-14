@@ -21,3 +21,7 @@ complete from the connection smoke tests.
 
 - Bronze one-day load and same-run replay were reported successful (9,285 rows); saved bronze job also passed through ADF.
 - Combined ADF landing-to-bronze pipeline implemented; live acceptance remains pending.
+
+- Combined ADF landing→bronze was reported successful, saved and published.
+- Silver snapshot warehouse implemented; test in Databricks before connecting its saved job to ADF.
+- Remaining: community/weather enrichment, gold marts/BI, late-arrival policy and daily scheduling.

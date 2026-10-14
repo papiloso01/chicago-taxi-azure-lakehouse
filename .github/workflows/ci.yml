@@ -10,7 +10,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        suite: [functional, integration, etl_validation]
+        suite: [functional, integration, etl_validation, e2e]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
