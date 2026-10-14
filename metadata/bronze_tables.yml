@@ -1,0 +1,19 @@
+version: 1
+tables:
+  - name: chicago_taxi_dev.bronze.taxi_trips
+    format: delta
+    natural_key: trip_id
+    grain: one current source snapshot per trip
+    raw_payload: all source fields with original JSON value types
+    common_source_fields: strings; converted in silver
+    provenance: [landing_run_id, source_file, extracted_at_utc, bronze_loaded_at_utc, payload_sha256]
+    duplicate_policy: reject conflicting duplicates within a run; merge newer extraction across runs
+    deletion_policy: no inferred deletes
+    status: implemented_pending_cloud_test
+  - name: chicago_taxi_dev.bronze.landing_runs
+    format: delta
+    natural_key: landing_run_id
+    grain: one successful bronze load per landing run
+    fields: [landing_run_id, extracted_rows, distinct_rows, loaded_at_utc]
+    transaction: separate from trip merge; repaired on replay
+    status: implemented_pending_cloud_test

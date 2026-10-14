@@ -1,6 +1,5 @@
-# Bronze transformations
+# Bronze
 
-Implementation pending. Preserve payloads and source keys; merge repeated keys without duplicate trips.
-
-Use PySpark DataFrame/SQL APIs supported by serverless Spark Connect. No custom SparkSession,
-RDD APIs or DataFrame cache assumptions. Implement and test each layer before scheduling it.
+`landing_manifest.py` verifies complete run integrity and prepares bounded page staging.
+`taxi_trips.py` defines the Spark schema, retains raw source values and performs replay-safe Delta merges.
+See `docs/bronze_loading.md` for the database contract and acceptance steps.

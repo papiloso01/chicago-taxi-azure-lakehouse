@@ -12,3 +12,9 @@
 
 Use PRs for review before merge. Do not claim future pipeline stages or MySQL/BI deployment as
 complete from the connection smoke tests.
+
+## Current acceptance
+
+- One-day notebook and ADF landing runs succeeded (9,285 rows in the notebook run).
+- Bronze loader implemented; live Delta merge/replay acceptance is pending.
+- Next: bronze acceptance, saved job and ADF handoff, then silver cleaning/facts/dimensions.

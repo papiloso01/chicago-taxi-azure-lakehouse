@@ -7,7 +7,7 @@ sources:
   initial_load: completed_calendar_year
   daily_window: T-1
   bounds: inclusive_start_exclusive_end
-  status: implemented_pending_cloud_test
+  status: one_day_cloud_test_passed
 - name: weather
   endpoint: https://archive-api.open-meteo.com/v1/archive
   natural_key: hour_utc

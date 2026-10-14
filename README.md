@@ -83,3 +83,7 @@ source data retains its provider terms.
 
 See [landing ingestion setup](docs/taxi_ingestion.md) for the serverless package, saved job,
 ADF parameters, raw manifests, reruns and live acceptance checks. No trigger is enabled.
+
+## Bronze loading
+
+See [bronze acceptance steps](docs/bronze_loading.md) for the explicit-schema Delta loader, manifest validation and replay checks. Live bronze acceptance is pending.
