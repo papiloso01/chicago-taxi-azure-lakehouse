@@ -1,35 +1,71 @@
 {
-	"name": "pl_ingest_taxi_landing",
-	"properties": {
-		"activities": [
-			{
-				"name": "pl_ingest_taxi_landing",
-				"type": "DatabricksJob",
-				"dependsOn": [],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"jobId": "553434583210414",
-					"jobParameters": {
-						"ingestion_job_id": "553434583210414",
-						"mode": "explicit",
-						"start": "2025-01-01",
-						"end": "2025-01-02",
-						"year": "2025"
-					}
-				},
-				"linkedServiceName": {
-					"referenceName": "ls_databricks_serverless_dev",
-					"type": "LinkedServiceReference"
-				}
-			}
-		],
-		"annotations": []
-	}
+  "name": "pl_ingest_taxi_landing",
+  "properties": {
+    "activities": [
+      {
+        "name": "pl_ingest_taxi_landing",
+        "type": "DatabricksJob",
+        "dependsOn": [],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "userProperties": [],
+        "typeProperties": {
+          "jobId": {
+            "value": "@pipeline().parameters.ingestion_job_id",
+            "type": "Expression"
+          },
+          "jobParameters": {
+            "mode": {
+              "value": "@pipeline().parameters.mode",
+              "type": "Expression"
+            },
+            "start": {
+              "value": "@pipeline().parameters.start",
+              "type": "Expression"
+            },
+            "end": {
+              "value": "@pipeline().parameters.end",
+              "type": "Expression"
+            },
+            "year": {
+              "value": "@pipeline().parameters.year",
+              "type": "Expression"
+            }
+          }
+        },
+        "linkedServiceName": {
+          "referenceName": "ls_databricks_serverless_dev",
+          "type": "LinkedServiceReference"
+        }
+      }
+    ],
+    "annotations": [],
+    "parameters": {
+      "ingestion_job_id": {
+        "type": "String",
+        "defaultValue": "553434583210414"
+      },
+      "mode": {
+        "type": "String",
+        "defaultValue": "daily"
+      },
+      "start": {
+        "type": "String",
+        "defaultValue": ""
+      },
+      "end": {
+        "type": "String",
+        "defaultValue": ""
+      },
+      "year": {
+        "type": "String",
+        "defaultValue": "2025"
+      }
+    }
+  }
 }

@@ -1,4 +1,4 @@
-name: Landing ingestion checks
+name: Lakehouse checks
 on:
   push:
   pull_request:
@@ -10,13 +10,17 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        suite: [functional, integration]
+        suite: [functional, integration, etl_validation]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - run: python -m pip install -e '.[test]'
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - run: python -m pip install -e '.[test,spark-test]'
       - run: python tools/validate_metadata.py
       - run: python -m pytest tests/${{ matrix.suite }} -v --junitxml=test-results/${{ matrix.suite }}.xml
       - uses: actions/upload-artifact@v4
