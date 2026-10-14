@@ -1,0 +1,33 @@
+{
+	"name": "pl_test_taxi_bronze",
+	"properties": {
+		"activities": [
+			{
+				"name": "pl_test_taxi_bronze",
+				"type": "DatabricksJob",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"jobId": "341771216415253",
+					"jobParameters": {
+						"job_id": "341771216415253",
+						"landing_run_id": "3d82e5dd38704205b4754da69d81348d",
+						"landing_root": "/Volumes/chicago_taxi_dev/landing/raw_files"
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "ls_databricks_serverless_dev",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"annotations": []
+	}
+}
