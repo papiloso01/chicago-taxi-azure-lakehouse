@@ -1,6 +1,7 @@
 """Immutable run folders; only success manifests are consumable by future bronze ETL."""
 import hashlib
 import json
+import re
 import uuid
 from datetime import date, datetime, timezone
 from pathlib import Path
@@ -18,14 +19,17 @@ def month_windows(start, end):
         start = stop
 
 
-def ingest(root, start, end, page_size=5000, token="", fetch=None, max_pages=50000):
+def ingest(root, start, end, page_size=5000, token="", fetch=None, max_pages=50000, run_id=None):
     windows = list(month_windows(start, end))
     if date.fromisoformat(start).year < 2024:
         raise ValueError("Taxi source covers 2024 onward")
     root = Path(root)
     if not root.is_absolute():
         raise ValueError("Landing root must be an absolute local/volume path")
-    run_id = uuid.uuid4().hex
+    if run_id is None:
+        run_id = uuid.uuid4().hex
+    elif not isinstance(run_id, str) or not re.fullmatch(r"[0-9a-f]{32}", run_id):
+        raise ValueError("run_id must contain exactly 32 lowercase hexadecimal characters")
     folder = root / "taxi_trips" / ("run_id=" + run_id)
     folder.mkdir(parents=True, exist_ok=False)
     report = dict(run_id=run_id, source="taxi_trips", status="running", start=start,

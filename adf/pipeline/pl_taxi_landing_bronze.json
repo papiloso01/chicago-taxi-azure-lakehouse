@@ -1,0 +1,134 @@
+{
+  "name": "pl_taxi_landing_bronze",
+  "properties": {
+    "concurrency": 1,
+    "parameters": {
+      "ingestion_job_id": {
+        "type": "String",
+        "defaultValue": "553434583210414"
+      },
+      "bronze_job_id": {
+        "type": "String",
+        "defaultValue": "341771216415253"
+      },
+      "mode": {
+        "type": "String",
+        "defaultValue": "daily"
+      },
+      "start": {
+        "type": "String",
+        "defaultValue": ""
+      },
+      "end": {
+        "type": "String",
+        "defaultValue": ""
+      },
+      "year": {
+        "type": "String",
+        "defaultValue": "2025"
+      },
+      "page_size": {
+        "type": "String",
+        "defaultValue": "1000"
+      },
+      "landing_root": {
+        "type": "String",
+        "defaultValue": "/Volumes/chicago_taxi_dev/landing/raw_files"
+      }
+    },
+    "activities": [
+      {
+        "name": "ingest_taxi_landing",
+        "type": "DatabricksJob",
+        "dependsOn": [],
+        "policy": {
+          "timeout": "0.04:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "jobId": {
+            "value": "@pipeline().parameters.ingestion_job_id",
+            "type": "Expression"
+          },
+          "jobParameters": {
+            "mode": {
+              "value": "@pipeline().parameters.mode",
+              "type": "Expression"
+            },
+            "start": {
+              "value": "@pipeline().parameters.start",
+              "type": "Expression"
+            },
+            "end": {
+              "value": "@pipeline().parameters.end",
+              "type": "Expression"
+            },
+            "year": {
+              "value": "@pipeline().parameters.year",
+              "type": "Expression"
+            },
+            "page_size": {
+              "value": "@pipeline().parameters.page_size",
+              "type": "Expression"
+            },
+            "landing_root": {
+              "value": "@pipeline().parameters.landing_root",
+              "type": "Expression"
+            },
+            "landing_run_id": {
+              "value": "@toLower(replace(pipeline().RunId, '-', ''))",
+              "type": "Expression"
+            }
+          }
+        },
+        "linkedServiceName": {
+          "referenceName": "ls_databricks_serverless_dev",
+          "type": "LinkedServiceReference"
+        }
+      },
+      {
+        "name": "load_taxi_bronze",
+        "type": "DatabricksJob",
+        "dependsOn": [
+          {
+            "activity": "ingest_taxi_landing",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "timeout": "0.04:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "jobId": {
+            "value": "@pipeline().parameters.bronze_job_id",
+            "type": "Expression"
+          },
+          "jobParameters": {
+            "landing_root": {
+              "value": "@pipeline().parameters.landing_root",
+              "type": "Expression"
+            },
+            "landing_run_id": {
+              "value": "@toLower(replace(pipeline().RunId, '-', ''))",
+              "type": "Expression"
+            }
+          }
+        },
+        "linkedServiceName": {
+          "referenceName": "ls_databricks_serverless_dev",
+          "type": "LinkedServiceReference"
+        }
+      }
+    ],
+    "annotations": []
+  }
+}

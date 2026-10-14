@@ -18,3 +18,6 @@ complete from the connection smoke tests.
 - One-day notebook and ADF landing runs succeeded (9,285 rows in the notebook run).
 - Bronze loader implemented; live Delta merge/replay acceptance is pending.
 - Next: bronze acceptance, saved job and ADF handoff, then silver cleaning/facts/dimensions.
+
+- Bronze one-day load and same-run replay were reported successful (9,285 rows); saved bronze job also passed through ADF.
+- Combined ADF landing-to-bronze pipeline implemented; live acceptance remains pending.

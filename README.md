@@ -87,3 +87,7 @@ ADF parameters, raw manifests, reruns and live acceptance checks. No trigger is 
 ## Bronze loading
 
 See [bronze acceptance steps](docs/bronze_loading.md) for the explicit-schema Delta loader, manifest validation and replay checks. Live bronze acceptance is pending.
+
+## ADF handoff
+
+[Combined landing-to-bronze activation](docs/adf_bronze_handoff.md) uses one shared pipeline run identity for both saved serverless jobs. Individual cloud tests passed; combined live acceptance is pending.
