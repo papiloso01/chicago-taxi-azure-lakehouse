@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "chicago-taxi-azure-lakehouse"
-version = "0.4.0"
+version = "0.5.0"
 description = "Azure Data Factory and Databricks serverless taxi lakehouse"
 requires-python = ">=3.12"
 dependencies = ["tzdata>=2024.1"]
@@ -18,4 +18,4 @@ spark-test = ["pyspark>=3.5.3,<3.6"]
 where = ["src"]
 
 [tool.pytest.ini_options]
-testpaths = ["tests/functional", "tests/integration", "tests/etl_validation"]
+testpaths = ["tests/functional", "tests/integration", "tests/etl_validation", "tests/e2e"]

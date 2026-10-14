@@ -1,6 +1,3 @@
-# Silver transformations
+# Silver
 
-Implementation pending. Clean, quarantine and build explicit fact/dimension grains.
-
-Use PySpark DataFrame/SQL APIs supported by serverless Spark Connect. No custom SparkSession,
-RDD APIs or DataFrame cache assumptions. Implement and test each layer before scheduling it.
+`contracts.py` defines warehouse schemas. `taxi_trips.py` cleans values, creates dimensions and fact joins, validates reconciliation/keys and publishes a pinned current snapshot. See `docs/silver_warehouse.md` for semantics and live acceptance.

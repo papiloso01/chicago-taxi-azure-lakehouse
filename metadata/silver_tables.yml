@@ -1,0 +1,91 @@
+{
+  "version": 1,
+  "layer": "silver",
+  "status": "implemented_pending_cloud_test",
+  "publication": "full snapshot; independent Delta transactions; completed warehouse_loads audit required",
+  "time_semantics": "Chicago local TIMESTAMP_NTZ; no inferred UTC instant",
+  "tables": [
+    {
+      "name": "chicago_taxi_dev.silver.fact_trip",
+      "format": "delta",
+      "key": "trip_id",
+      "schema_sql": "trip_id STRING, taxi_key STRING, company_key STRING, payment_type_key STRING,\nstart_date_key INT, pickup_area_key INT, dropoff_area_key INT,\ntrip_start_local TIMESTAMP_NTZ, trip_end_local TIMESTAMP_NTZ,\ntrip_seconds BIGINT, trip_miles DECIMAL(18,6), trip_km DECIMAL(18,6),\nfare DECIMAL(18,2), tips DECIMAL(18,2), tolls DECIMAL(18,2), extras DECIMAL(18,2), trip_total DECIMAL(18,2),\nhas_distance BOOLEAN, has_trip_total BOOLEAN, has_taxi_id BOOLEAN,\nlanding_run_id STRING, payload_sha256 STRING, extracted_at_utc TIMESTAMP",
+      "grain": "one current accepted trip"
+    },
+    {
+      "name": "chicago_taxi_dev.silver.dim_taxi",
+      "format": "delta",
+      "key": "taxi_key",
+      "schema_sql": "taxi_key STRING, taxi_id STRING, is_unknown BOOLEAN",
+      "grain": "one observed dimension member"
+    },
+    {
+      "name": "chicago_taxi_dev.silver.dim_company",
+      "format": "delta",
+      "key": "company_key",
+      "schema_sql": "company_key STRING, company_name STRING, is_unknown BOOLEAN",
+      "grain": "one observed dimension member"
+    },
+    {
+      "name": "chicago_taxi_dev.silver.dim_payment_type",
+      "format": "delta",
+      "key": "payment_type_key",
+      "schema_sql": "payment_type_key STRING, payment_type STRING, is_unknown BOOLEAN",
+      "grain": "one observed dimension member"
+    },
+    {
+      "name": "chicago_taxi_dev.silver.dim_date",
+      "format": "delta",
+      "key": "date_key",
+      "schema_sql": "date_key INT, calendar_date DATE, year INT, month INT, day INT, day_of_week INT",
+      "grain": "one observed dimension member"
+    },
+    {
+      "name": "chicago_taxi_dev.silver.dim_community_area",
+      "format": "delta",
+      "key": "area_key",
+      "schema_sql": "area_key INT, area_id INT, area_name STRING, is_unknown BOOLEAN",
+      "grain": "one observed dimension member"
+    },
+    {
+      "name": "chicago_taxi_dev.silver.quarantine_trip",
+      "format": "delta",
+      "key": "trip_id",
+      "schema_sql": "trip_id STRING, raw_payload STRING, quality_issues ARRAY<STRING>, landing_run_id STRING, payload_sha256 STRING, extracted_at_utc TIMESTAMP",
+      "grain": "one current rejected trip"
+    },
+    {
+      "name": "chicago_taxi_dev.silver.warehouse_loads",
+      "format": "delta",
+      "key": "silver_load_id",
+      "grain": "one completed rebuild",
+      "schema_sql": "silver_load_id STRING, bronze_version BIGINT, input_rows BIGINT, fact_rows BIGINT, quarantined_rows BIGINT, completed_at_utc TIMESTAMP"
+    }
+  ],
+  "foreign_keys": [
+    {
+      "source": "fact_trip.taxi_key",
+      "target": "dim_taxi.taxi_key"
+    },
+    {
+      "source": "fact_trip.company_key",
+      "target": "dim_company.company_key"
+    },
+    {
+      "source": "fact_trip.payment_type_key",
+      "target": "dim_payment_type.payment_type_key"
+    },
+    {
+      "source": "fact_trip.start_date_key",
+      "target": "dim_date.date_key"
+    },
+    {
+      "source": "fact_trip.pickup_area_key",
+      "target": "dim_community_area.area_key"
+    },
+    {
+      "source": "fact_trip.dropoff_area_key",
+      "target": "dim_community_area.area_key"
+    }
+  ]
+}
