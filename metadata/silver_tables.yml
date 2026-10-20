@@ -1,7 +1,7 @@
 {
   "version": 1,
   "layer": "silver",
-  "status": "implemented_pending_cloud_test",
+  "status": "one_day_cloud_test_passed",
   "publication": "full snapshot; independent Delta transactions; completed warehouse_loads audit required",
   "time_semantics": "Chicago local TIMESTAMP_NTZ; no inferred UTC instant",
   "tables": [

@@ -1,27 +1,32 @@
 # Implementation roadmap
 
-1. Foundation merged and live ADF definitions imported.
-2. Taxi extraction and ADF orchestration implemented; review this PR, create the ingestion job and perform live acceptance. Weather/community ingestion remains pending.
-3. Implement bronze source-key MERGE and audit/watermark behaviour.
-4. Implement silver schemas, quarantine, facts/dimensions and contract checks.
-5. Implement gold marts and count/revenue reconciliation.
-6. Add functional, integration, ETL validation and E2E suites as separate CI jobs.
-7. Implement local MySQL publication and failure recovery; validate cloud provisioning separately.
-8. Add Key Vault, monitored schedules, optional advisory AI PR review and reviewed infra automation.
-9. Build Power BI/Tableau outputs; perform real cloud acceptance and backfill benchmarks.
+## Completed and reported live acceptance
 
-Use PRs for review before merge. Do not claim future pipeline stages or MySQL/BI deployment as
-complete from the connection smoke tests.
+- GitHub foundation, ADF Git integration, ADLS and Unity Catalog setup.
+- One-day API extraction: 9,285 rows in the initial notebook test.
+- Bronze Delta loading, same-run replay and saved-job execution through ADF.
+- Combined landing → bronze pipeline succeeded and was published.
+- Silver typed fact/dimensions/quarantine ran successfully; counts reconciled, uniqueness checks
+  passed and replay counts stayed unchanged.
+- Saved silver job 654018398720089 passed its ADF test; user saved and published.
+- Functional, HTTP integration, Spark ETL validation and offline e2e CI suites implemented.
 
-## Current acceptance
+## Current review and next acceptance
 
-- One-day notebook and ADF landing runs succeeded (9,285 rows in the notebook run).
-- Bronze loader implemented; live Delta merge/replay acceptance is pending.
-- Next: bronze acceptance, saved job and ADF handoff, then silver cleaning/facts/dimensions.
+The three-stage ADF pipeline is implemented. Review/merge its PR, then follow
+[combined silver acceptance](adf_silver_handoff.md) before publication or scheduling.
+Individual-stage success does not establish combined-pipeline acceptance.
 
-- Bronze one-day load and same-run replay were reported successful (9,285 rows); saved bronze job also passed through ADF.
-- Combined ADF landing-to-bronze pipeline implemented; live acceptance remains pending.
+## Remaining
 
-- Combined ADF landing→bronze was reported successful, saved and published.
-- Silver snapshot warehouse implemented; test in Databricks before connecting its saved job to ADF.
-- Remaining: community/weather enrichment, gold marts/BI, late-arrival policy and daily scheduling.
+1. Community-area names/geometry and weather ingestion/enrichment.
+2. Gold reporting marts, metric coverage, count/revenue reconciliation and BI exports.
+3. Year backfill benchmarking, late-arrival overlap/reconciliation and incremental silver optimization.
+4. Key Vault, monitored schedules, failure alerts and reviewed infrastructure automation.
+5. Optional advisory AI PR review; keep deterministic CI checks authoritative.
+6. MySQL serving/publication and recovery tests; Azure provisioning remains blocked for this subscription.
+7. Tableau/Power BI dashboard connection and reporting acceptance.
+
+Use PRs for review before merge. No daily schedule, full-year benchmark, cloud MySQL or BI deployment
+is established by the one-day tests. Silver is a full snapshot and its multiple tables do not publish
+as one transaction; block downstream readers while rebuilding or recovering.
