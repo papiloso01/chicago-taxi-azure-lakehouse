@@ -1,0 +1,31 @@
+{
+	"name": "pl_test_taxi_silver",
+	"properties": {
+		"activities": [
+			{
+				"name": "pl_test_taxi_silver",
+				"type": "DatabricksJob",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"jobId": "654018398720089",
+					"jobParameters": {
+						"catalog": "chicago_taxi_dev"
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "ls_databricks_serverless_dev",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"annotations": []
+	}
+}
