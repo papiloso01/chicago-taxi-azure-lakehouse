@@ -238,6 +238,187 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/pl_taxi_landing_bronze_silver')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "ingest_taxi_landing",
+						"type": "DatabricksJob",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.04:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"jobId": {
+								"value": "@pipeline().parameters.ingestion_job_id",
+								"type": "Expression"
+							},
+							"jobParameters": {
+								"mode": {
+									"value": "@pipeline().parameters.mode",
+									"type": "Expression"
+								},
+								"start": {
+									"value": "@pipeline().parameters.start",
+									"type": "Expression"
+								},
+								"end": {
+									"value": "@pipeline().parameters.end",
+									"type": "Expression"
+								},
+								"year": {
+									"value": "@pipeline().parameters.year",
+									"type": "Expression"
+								},
+								"page_size": {
+									"value": "@pipeline().parameters.page_size",
+									"type": "Expression"
+								},
+								"landing_root": {
+									"value": "@pipeline().parameters.landing_root",
+									"type": "Expression"
+								},
+								"landing_run_id": {
+									"value": "@toLower(replace(pipeline().RunId, '-', ''))",
+									"type": "Expression"
+								}
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "ls_databricks_serverless_dev",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "load_taxi_bronze",
+						"type": "DatabricksJob",
+						"dependsOn": [
+							{
+								"activity": "ingest_taxi_landing",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.04:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"jobId": {
+								"value": "@pipeline().parameters.bronze_job_id",
+								"type": "Expression"
+							},
+							"jobParameters": {
+								"landing_root": {
+									"value": "@pipeline().parameters.landing_root",
+									"type": "Expression"
+								},
+								"landing_run_id": {
+									"value": "@toLower(replace(pipeline().RunId, '-', ''))",
+									"type": "Expression"
+								}
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "ls_databricks_serverless_dev",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "build_taxi_silver",
+						"type": "DatabricksJob",
+						"dependsOn": [
+							{
+								"activity": "load_taxi_bronze",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.04:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"jobId": {
+								"value": "@pipeline().parameters.silver_job_id",
+								"type": "Expression"
+							},
+							"jobParameters": {
+								"catalog": "chicago_taxi_dev"
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "ls_databricks_serverless_dev",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"concurrency": 1,
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"ingestion_job_id": {
+						"type": "String",
+						"defaultValue": "553434583210414"
+					},
+					"bronze_job_id": {
+						"type": "String",
+						"defaultValue": "341771216415253"
+					},
+					"mode": {
+						"type": "String",
+						"defaultValue": "explicit"
+					},
+					"start": {
+						"type": "String",
+						"defaultValue": "2025-01-01"
+					},
+					"end": {
+						"type": "String",
+						"defaultValue": "2025-01-02"
+					},
+					"year": {
+						"type": "String",
+						"defaultValue": "2025"
+					},
+					"page_size": {
+						"type": "String",
+						"defaultValue": "1000"
+					},
+					"landing_root": {
+						"type": "String",
+						"defaultValue": "/Volumes/chicago_taxi_dev/landing/raw_files"
+					},
+					"silver_job_id": {
+						"type": "String",
+						"defaultValue": "654018398720089"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_databricks_serverless_dev')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/pl_test_databricks_connection')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -353,6 +534,45 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/pl_test_taxi_silver')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "pl_test_taxi_silver",
+						"type": "DatabricksJob",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"jobId": "654018398720089",
+							"jobParameters": {
+								"catalog": "chicago_taxi_dev"
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "ls_databricks_serverless_dev",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_databricks_serverless_dev')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/ls_adls_chicago_taxi_dev')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -404,45 +624,6 @@
 				}
 			},
 			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/pl_test_taxi_silver')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "pl_test_taxi_silver",
-						"type": "DatabricksJob",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"jobId": "654018398720089",
-							"jobParameters": {
-								"catalog": "chicago_taxi_dev"
-							}
-						},
-						"linkedServiceName": {
-							"referenceName": "ls_databricks_serverless_dev",
-							"type": "LinkedServiceReference"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/ls_databricks_serverless_dev')]"
-			]
 		}
 	]
 }
