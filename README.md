@@ -95,3 +95,9 @@ See [bronze acceptance steps](docs/bronze_loading.md) for the explicit-schema De
 ## Silver warehouse
 
 [Silver setup and validation](docs/silver_warehouse.md) builds typed trip facts, dimensions and quarantine records from a pinned bronze snapshot. Cloud acceptance remains pending.
+
+## Three-stage ADF orchestration
+
+[Landing → bronze → silver acceptance](docs/adf_silver_handoff.md) connects the three individually
+validated serverless jobs. The combined three-stage pipeline requires live testing after merge;
+no new wheel is required for this orchestration-only change.
