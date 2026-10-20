@@ -13,14 +13,14 @@
 
 ## Current review and next acceptance
 
-The three-stage ADF pipeline is implemented. Review/merge its PR, then follow
-[combined silver acceptance](adf_silver_handoff.md) before publication or scheduling.
-Individual-stage success does not establish combined-pipeline acceptance.
+The three-stage ADF pipeline succeeded; the user confirmed matching counts, completed audits and publication.
+Gold reporting marts are implemented. Review/merge the gold PR, then follow
+[gold acceptance](gold_reporting.md) before creating its saved job or connecting BI.
 
 ## Remaining
 
 1. Community-area names/geometry and weather ingestion/enrichment.
-2. Gold reporting marts, metric coverage, count/revenue reconciliation and BI exports.
+2. Gold live acceptance, saved-job/ADF handoff, BI exports and dashboard connection.
 3. Year backfill benchmarking, late-arrival overlap/reconciliation and incremental silver optimization.
 4. Key Vault, monitored schedules, failure alerts and reviewed infrastructure automation.
 5. Optional advisory AI PR review; keep deterministic CI checks authoritative.

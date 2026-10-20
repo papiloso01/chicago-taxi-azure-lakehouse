@@ -1,4 +1,4 @@
-"""Offline source→landing→bronze→silver flow; excludes Azure and Delta storage writes."""
+"""Offline source→landing→bronze→silver→gold flow; excludes Azure and Delta storage writes."""
 import json
 import shutil
 import pytest
@@ -7,9 +7,10 @@ from chicago_taxi.ingestion.landing import ingest
 from chicago_taxi.transformations.bronze.landing_manifest import stage_run
 from chicago_taxi.transformations.bronze.taxi_trips import prepare, stage_schema
 from chicago_taxi.transformations.silver.taxi_trips import build_tables, validate_tables
+from chicago_taxi.transformations.gold.taxi_marts import build_marts, reconcile
 
 
-def test_raw_pages_to_fact_dimension_and_quarantine(tmp_path):
+def test_raw_pages_through_gold_reporting(tmp_path):
     rows = [dict(trip_id='a',taxi_id='vehicle',trip_start_timestamp='2025-01-01T12:00:00',trip_miles='1',trip_total='10'),
             dict(trip_id='b',trip_start_timestamp='broken',trip_miles='3',trip_total='20')]
     report = ingest(tmp_path,'2025-01-01','2025-01-02',run_id='f'*32,fetch=lambda *args: rows)
@@ -21,6 +22,9 @@ def test_raw_pages_to_fact_dimension_and_quarantine(tmp_path):
         tables = build_tables(bronze)
         assert validate_tables(tables,manifest['extracted_rows']) == dict(input_rows=2,fact_rows=1,quarantined_rows=1)
         assert tables['fact_trip'].first().trip_id == 'a'
+        marts = build_marts(tables,'offline-gold')
+        assert reconcile(marts,tables) == dict(fact_rows=1,quarantined_rows=1)
+        assert marts['mart_daily_summary'].first().known_revenue_usd == 10
         assert tables['quarantine_trip'].first().trip_id == 'b'
         assert json.loads((folder/'manifest.json').read_text())['status'] == 'success'
         # Same immutable inputs regenerate the same dimension keys and fact identifiers.
