@@ -1,33 +1,33 @@
 # Implementation roadmap
 
-## Completed and reported live acceptance
+## Reported live acceptance
 
-- GitHub foundation, ADF Git integration, ADLS and Unity Catalog setup.
-- One-day API extraction: 9,285 rows in the initial notebook test.
-- Bronze Delta loading, same-run replay and saved-job execution through ADF.
-- Combined landing → bronze pipeline succeeded and was published.
-- Silver typed fact/dimensions/quarantine ran successfully; counts reconciled, uniqueness checks
-  passed and replay counts stayed unchanged.
-- Saved silver job 654018398720089 passed its ADF test; user saved and published.
-- Functional, HTTP integration, Spark ETL validation and offline e2e CI suites implemented.
+- ADF Git integration, ADLS/Unity Catalog and serverless saved jobs are configured.
+- Full API → landing → bronze → silver → gold pipeline succeeded and was published.
+- January–May 2025 backfill completed; layer counts, revenue and audit lineage matched.
+- Bronze replay and silver/gold rebuild checks completed; package/runtime compatibility resolved with Standard v6 for gold.
+- Tableau Cloud connects to five gold marts; dashboard and cross-source date parameters were published.
+- Functional, HTTP integration, Spark ETL validation and offline end-to-end CI suites are implemented.
 
-## Current review and next acceptance
+## Current review: community-area enrichment
 
-The three-stage ADF pipeline succeeded; the user confirmed matching counts, completed audits and publication.
-Gold was built and reconciled with silver; its saved job 800504364677614 passed the standalone ADF test.
-Review/merge the four-stage orchestration PR, then follow
-[full pipeline acceptance](adf_gold_handoff.md) before dashboard refreshes.
+- Official community API schema and all 77 public features validated read-only.
+- Ingestion, geometry validation, immutable raw storage, bronze snapshots and a versioned silver reference are implemented.
+- Silver rebuilds reuse the published reference for names; reference versions are bound to silver load IDs.
+- Gold adds a live map dataset and verifies joins preserve known-area trip/revenue totals.
+- GeoJSON boundary export and Tableau activation instructions are included.
+- Azure reference ingestion, package 0.7.0, rebuild recovery and live Tableau map acceptance remain pending PR review/merge.
+
+Follow [community-area activation](community_area_enrichment.md). Reuse the current bronze backfill; no five-month API reload is needed.
 
 ## Remaining
 
-1. Community-area names/geometry and weather ingestion/enrichment.
-2. Combined four-stage live acceptance, BI exports and dashboard connection.
-3. Year backfill benchmarking, late-arrival overlap/reconciliation and incremental silver optimization.
-4. Key Vault, monitored schedules, failure alerts and reviewed infrastructure automation.
-5. Optional advisory AI PR review; keep deterministic CI checks authoritative.
-6. MySQL serving/publication and recovery tests; Azure provisioning remains blocked for this subscription.
-7. Tableau/Power BI dashboard connection and reporting acceptance.
+1. Activate and validate named area demand and Tableau map.
+2. Weather ingestion/enrichment with source delay and missing-data coverage.
+3. Late-arrival overlap/reconciliation policy, daily schedules, alerts and retry/recovery automation.
+4. Larger backfill/runtime benchmarking and incremental silver/gold optimization.
+5. Optional advisory AI PR review alongside deterministic tests.
+6. MySQL serving/publication and recovery if provisioning becomes available or local serving is required.
 
-Use PRs for review before merge. No daily schedule, full-year benchmark, cloud MySQL or BI deployment
-is established by the one-day tests. Silver is a full snapshot and its multiple tables do not publish
-as one transaction; block downstream readers while rebuilding or recovering.
+Keep PR review before merge and cloud acceptance after merge. Snapshot table groups do not publish as one transaction;
+block competing writers/readers during rebuild/failure. No daily schedule or full-year benchmark is established by these tests.

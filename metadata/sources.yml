@@ -7,7 +7,7 @@ sources:
   initial_load: completed_calendar_year
   daily_window: T-1
   bounds: inclusive_start_exclusive_end
-  status: one_day_cloud_test_passed
+  status: five_month_cloud_test_passed
 - name: weather
   endpoint: https://archive-api.open-meteo.com/v1/archive
   natural_key: hour_utc
@@ -20,4 +20,12 @@ sources:
   endpoint: https://data.cityofchicago.org/resource/igwz-8jzy.json
   natural_key: area_num_1
   expected_records: 77
-  status: planned
+  status: implemented_pending_cloud_test
+  refresh: manual_complete_snapshot
+  coordinate_reference_system: EPSG:4326
+  schema_fields:
+  - area_num_1
+  - area_numbe
+  - community
+  - the_geom
+  validation: 77 unique IDs 1..77; named valid polygon boundaries

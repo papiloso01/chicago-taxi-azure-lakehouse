@@ -111,3 +111,7 @@ no new wheel is required for this orchestration-only change.
 ## Full ADF orchestration
 
 [Landing → bronze → silver → gold acceptance](docs/adf_gold_handoff.md) connects the four individually tested jobs. No wheel change is required; retain gold’s working Standard v6 environment. Combined four-stage acceptance is pending.
+
+## Community areas and maps
+
+[Community-area activation and Tableau guide](docs/community_area_enrichment.md) adds authoritative names, versioned geographic reference data and a live map mart. Package 0.7.0 preserves names across silver rebuilds. Live Azure/map acceptance remains pending.
