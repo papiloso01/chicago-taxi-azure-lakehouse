@@ -22,3 +22,14 @@ def test_bad_warehouse_metadata_rejected(tmp_path,defect):
     else: data['foreign_keys'][0]['target'] = 'dim_taxi.missing'
     path.write_text(json.dumps(data))
     with pytest.raises(ValueError): module.validate(tmp_path/'metadata')
+
+
+@pytest.mark.parametrize('defect',['duplicate','composite_key'])
+def test_bad_gold_contract_rejected(tmp_path,defect):
+    shutil.copytree('metadata',tmp_path/'metadata')
+    path=tmp_path/'metadata'/'gold_tables.yml'
+    data=json.loads(path.read_text())
+    if defect == 'duplicate': data['tables'].append(data['tables'][0])
+    else: data['tables'][0]['key'] = ['trip_date','missing_column']
+    path.write_text(json.dumps(data))
+    with pytest.raises(ValueError): module.validate(tmp_path/'metadata')

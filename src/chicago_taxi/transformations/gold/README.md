@@ -1,6 +1,3 @@
-# Gold transformations
+# Gold
 
-Implementation pending. Build reporting marts from validated silver data; preserve trip counts and amounts.
-
-Use PySpark DataFrame/SQL APIs supported by serverless Spark Connect. No custom SparkSession,
-RDD APIs or DataFrame cache assumptions. Implement and test each layer before scheduling it.
+`contracts.py` defines reporting schemas and grains. `taxi_marts.py` builds five coverage-aware marts, validates per-date counts/revenue/distance and loads pinned silver snapshots. See `docs/gold_reporting.md` for publication and dashboard metric rules.

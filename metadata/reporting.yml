@@ -1,5 +1,5 @@
 version: 1
-status: planned
+status: implemented_pending_cloud_test
 rules:
   vehicle_identity: Taxi IDs identify vehicles, not drivers.
   revenue: Reported trip total in USD, not profit.
@@ -8,3 +8,5 @@ rules:
   gender: Not available in source; do not infer.
   weather: Modelled city-level weather; missing stays unavailable.
   area_activity: Pickup and dropoff counted separately; summing both doubles activity counts.
+  coverage: Missing revenue/distance stays null; publish known-value counts and coverage.
+  taxi_ranking: Known vehicles only; daily dense rank; multi-day ranks must be recalculated.

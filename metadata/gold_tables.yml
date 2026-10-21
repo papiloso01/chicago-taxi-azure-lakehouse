@@ -1,0 +1,76 @@
+{
+  "version": 1,
+  "layer": "gold",
+  "status": "implemented_pending_cloud_test",
+  "source": "completed silver snapshot with pinned Delta versions",
+  "publication": "full snapshots; completed reporting_loads audit and matching gold_load_id required; separate transactions",
+  "tables": [
+    {
+      "name": "chicago_taxi_dev.gold.mart_daily_summary",
+      "format": "delta",
+      "key": [
+        "trip_date"
+      ],
+      "grain": "trip_date",
+      "schema_sql": "trip_date DATE, trip_count BIGINT, revenue_trip_count BIGINT, known_revenue_usd DECIMAL(28,2),\ndistance_trip_count BIGINT, identified_taxi_trip_count BIGINT, total_km DECIMAL(28,6), avg_known_trip_total_usd DECIMAL(22,6),\navg_known_trip_km DECIMAL(22,6), shortest_positive_trip_km DECIMAL(18,6), longest_trip_km DECIMAL(18,6),\nrevenue_coverage DOUBLE, distance_coverage DOUBLE, taxi_identity_coverage DOUBLE, gold_load_id STRING"
+    },
+    {
+      "name": "chicago_taxi_dev.gold.mart_taxi_revenue_daily",
+      "format": "delta",
+      "key": [
+        "trip_date",
+        "taxi_key"
+      ],
+      "grain": "trip_date + taxi_key",
+      "schema_sql": "trip_date DATE, taxi_key STRING, taxi_id STRING, trip_count BIGINT, revenue_trip_count BIGINT, known_revenue_usd DECIMAL(28,2),\ndistance_trip_count BIGINT, identified_taxi_trip_count BIGINT, total_km DECIMAL(28,6), avg_known_trip_total_usd DECIMAL(22,6),\navg_known_trip_km DECIMAL(22,6), shortest_positive_trip_km DECIMAL(18,6), longest_trip_km DECIMAL(18,6),\nrevenue_coverage DOUBLE, distance_coverage DOUBLE, taxi_identity_coverage DOUBLE, revenue_rank BIGINT, gold_load_id STRING"
+    },
+    {
+      "name": "chicago_taxi_dev.gold.mart_area_demand_daily",
+      "format": "delta",
+      "key": [
+        "trip_date",
+        "area_role",
+        "area_key"
+      ],
+      "grain": "trip_date + area_role + area_key",
+      "schema_sql": "trip_date DATE, area_role STRING, area_key INT, area_id INT, area_name STRING, is_unknown BOOLEAN, trip_count BIGINT, revenue_trip_count BIGINT, known_revenue_usd DECIMAL(28,2),\ndistance_trip_count BIGINT, identified_taxi_trip_count BIGINT, total_km DECIMAL(28,6), avg_known_trip_total_usd DECIMAL(22,6),\navg_known_trip_km DECIMAL(22,6), shortest_positive_trip_km DECIMAL(18,6), longest_trip_km DECIMAL(18,6),\nrevenue_coverage DOUBLE, distance_coverage DOUBLE, taxi_identity_coverage DOUBLE, gold_load_id STRING"
+    },
+    {
+      "name": "chicago_taxi_dev.gold.mart_company_payment_daily",
+      "format": "delta",
+      "key": [
+        "trip_date",
+        "company_key",
+        "payment_type_key"
+      ],
+      "grain": "trip_date + company_key + payment_type_key",
+      "schema_sql": "trip_date DATE, company_key STRING, company_name STRING, payment_type_key STRING, payment_type STRING, trip_count BIGINT, revenue_trip_count BIGINT, known_revenue_usd DECIMAL(28,2),\ndistance_trip_count BIGINT, identified_taxi_trip_count BIGINT, total_km DECIMAL(28,6), avg_known_trip_total_usd DECIMAL(22,6),\navg_known_trip_km DECIMAL(22,6), shortest_positive_trip_km DECIMAL(18,6), longest_trip_km DECIMAL(18,6),\nrevenue_coverage DOUBLE, distance_coverage DOUBLE, taxi_identity_coverage DOUBLE, gold_load_id STRING"
+    },
+    {
+      "name": "chicago_taxi_dev.gold.mart_distance_extremes",
+      "format": "delta",
+      "key": [
+        "trip_date",
+        "extreme_type",
+        "trip_id"
+      ],
+      "grain": "trip_date + extreme_type + trip_id",
+      "schema_sql": "trip_date DATE, extreme_type STRING, trip_id STRING, taxi_id STRING,\ntrip_km DECIMAL(18,6), trip_total DECIMAL(18,2), pickup_area_key INT, dropoff_area_key INT, gold_load_id STRING"
+    },
+    {
+      "name": "chicago_taxi_dev.gold.reporting_loads",
+      "format": "delta",
+      "key": "gold_load_id",
+      "grain": "one completed gold publication",
+      "schema_sql": "gold_load_id STRING, silver_load_id STRING, silver_versions_json STRING, fact_rows BIGINT, quarantined_rows BIGINT, completed_at_utc TIMESTAMP"
+    }
+  ],
+  "metric_rules": {
+    "revenue": "Known gross trip_total USD; null when all unavailable; report coverage",
+    "taxi_ranking": "Known vehicles only; per-date dense rank; missing revenue has null rank",
+    "distance": "Reported trip kilometres; retain ties; shortest positive excludes zero",
+    "areas": "One role at a time for totals; pickup + dropoff doubles trip population",
+    "gender": "Unavailable; do not infer",
+    "quarantine": "Excluded from gold metrics, retained in audit counts"
+  }
+}

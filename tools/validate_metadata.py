@@ -17,13 +17,15 @@ def validate(root="metadata"):
     reporting = yaml.safe_load((Path(root) / "reporting.yml").read_text())
     if not reporting.get("rules"):
         raise ValueError("Missing metric rules")
-    warehouse_path = Path(root) / "silver_tables.yml"
-    if warehouse_path.exists():
+    for layer in ("silver", "gold"):
+        warehouse_path = Path(root) / (layer + "_tables.yml")
+        if not warehouse_path.exists():
+            continue
         warehouse = yaml.safe_load(warehouse_path.read_text())
         tables = warehouse.get("tables", [])
         identifiers = [table["name"] for table in tables]
         if not tables or len(identifiers) != len(set(identifiers)):
-            raise ValueError("Missing or duplicate silver table metadata")
+            raise ValueError("Missing or duplicate warehouse table metadata")
         by_short_name = {}
         for table in tables:
             if not re.fullmatch(r"[A-Za-z_][A-Za-z_0-9]*\.[A-Za-z_][A-Za-z_0-9]*\.[A-Za-z_][A-Za-z_0-9]*",table["name"]):
@@ -31,8 +33,12 @@ def validate(root="metadata"):
             for required in ["key", "grain", "schema_sql", "format"]:
                 if not table.get(required):
                     raise ValueError("Missing warehouse contract: " + required)
-            if not re.search(r"(?:^|,)\s*"+re.escape(table["key"])+r"\s+",table["schema_sql"]):
-                raise ValueError("Warehouse key absent from schema")
+            keys = [table["key"]] if isinstance(table["key"], str) else table["key"]
+            if not isinstance(keys, list) or not all(isinstance(key,str) for key in keys):
+                raise ValueError("Invalid warehouse key")
+            for key in keys:
+                if not re.search(r"(?:^|,)\s*"+re.escape(key)+r"\s+",table["schema_sql"]):
+                    raise ValueError("Warehouse key absent from schema")
             by_short_name[table["name"].split(".")[-1]] = table
         for reference in warehouse.get("foreign_keys", []):
             for end in ["source", "target"]:
