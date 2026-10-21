@@ -115,3 +115,7 @@ area-role separation, per-date reconciliation and schema contracts. Publication 
 with simulated Delta history/audit responses. The offline e2e now continues from fixture API rows through
 landing files, bronze, silver and gold transformations. It excludes actual Delta storage, Azure, ADF,
 subscription capacity and external BI; those remain live acceptance work.
+
+## Reported live acceptance
+
+The user completed the gold build using Standard v6, confirmed matching silver/gold totals and an audit, then successfully tested saved gold job 800504364677614 through ADF. Follow `adf_gold_handoff.md` for the combined four-stage run.

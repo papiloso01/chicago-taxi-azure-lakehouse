@@ -1,7 +1,7 @@
 {
   "version": 1,
   "layer": "gold",
-  "status": "implemented_pending_cloud_test",
+  "status": "one_day_cloud_test_passed",
   "source": "completed silver snapshot with pinned Delta versions",
   "publication": "full snapshots; completed reporting_loads audit and matching gold_load_id required; separate transactions",
   "tables": [
