@@ -3,6 +3,8 @@
 An API-to-dashboard project using Azure Data Factory, Azure Databricks serverless PySpark,
 ADLS Gen2 / Delta Lake and a planned MySQL reporting database.
 
+<img width="1868" height="869" alt="Chicago Taxi Overview" src="https://github.com/user-attachments/assets/e2d45fe7-b816-4dab-ac32-201b3bf319ed" />
+
 ## Current status
 
 | Component | Status |
