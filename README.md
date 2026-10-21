@@ -105,3 +105,7 @@ no new wheel is required for this orchestration-only change.
 ## Gold reporting marts
 
 [Gold setup and metric rules](docs/gold_reporting.md) creates five dashboard marts with reconciliation, measure coverage and publication lineage. Live gold/BI acceptance remains pending.
+
+## Full ADF orchestration
+
+[Landing → bronze → silver → gold acceptance](docs/adf_gold_handoff.md) connects the four individually tested jobs. No wheel change is required; retain gold’s working Standard v6 environment. Combined four-stage acceptance is pending.
