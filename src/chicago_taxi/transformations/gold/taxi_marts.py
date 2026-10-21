@@ -4,7 +4,7 @@ import re
 import uuid
 from functools import reduce
 from pyspark.sql import functions as F, Window
-from chicago_taxi.transformations.gold.contracts import SCHEMAS, KEYS
+from chicago_taxi.transformations.gold.contracts import SCHEMAS, KEYS, MAP_SCHEMA
 from chicago_taxi.transformations.silver.contracts import SCHEMAS as SILVER_SCHEMAS
 from chicago_taxi.transformations.silver.taxi_trips import validate_tables as validate_silver
 
@@ -50,6 +50,14 @@ def build_marts(silver, load_id):
             'trip_id','taxi_id','trip_km','trip_total','pickup_area_key','dropoff_area_key'))
     marts = dict(mart_daily_summary=daily,mart_taxi_revenue_daily=taxis,mart_area_demand_daily=areas,
         mart_company_payment_daily=companies,mart_distance_extremes=extremes[0].unionByName(extremes[1]))
+    if 'ref_community_area' in silver:
+        reference=silver['ref_community_area']
+        mismatched=silver['dim_community_area'].filter('area_key != 0').alias('d').join(reference.alias('r'),'area_key','left')
+        if mismatched.filter(F.col('r.area_name').isNull() | ~F.col('d.area_name').eqNullSafe(F.col('r.area_name'))).limit(1).count():
+            raise ValueError('Silver area names do not match pinned reference; rebuild silver')
+        marts['mart_area_map_daily']=areas.filter('area_key != 0').join(reference.select('area_key','geometry_geojson',
+            'map_latitude','map_longitude',F.col('source_run_id').alias('reference_run_id')),'area_key','inner').select(
+            *areas.columns,'geometry_geojson','map_latitude','map_longitude','reference_run_id')
     return {name:df.withColumn('gold_load_id',F.lit(load_id)) for name,df in marts.items()}
 
 
@@ -69,7 +77,15 @@ def reconcile(marts, silver):
         target = reference.select('trip_date',*metrics)
         if actual.exceptAll(target).limit(1).count() or target.exceptAll(actual).limit(1).count():
             raise ValueError('Gold reconciliation failed: '+label)
-    for name, keys in KEYS.items():
+    if 'mart_area_map_daily' in marts:
+        expected_map=marts['mart_area_demand_daily'].filter('area_key != 0')
+        actual_map=marts['mart_area_map_daily'].select(*expected_map.columns)
+        if actual_map.exceptAll(expected_map).limit(1).count() or expected_map.exceptAll(actual_map).limit(1).count():
+            raise ValueError('Map enrichment changed area demand counts or revenue')
+    keys_to_check=dict(KEYS)
+    if 'mart_area_map_daily' in marts:
+        keys_to_check['mart_area_map_daily']=['trip_date','area_role','area_key']
+    for name, keys in keys_to_check.items():
         frame = marts[name]
         null_key = reduce(lambda left,right:left|right,[F.col(key).isNull() for key in keys])
         if frame.filter(null_key).limit(1).count() or frame.groupBy(*keys).count().filter('count > 1').limit(1).count():
@@ -105,12 +121,20 @@ def load_gold(spark, catalog='chicago_taxi_dev'):
     if not re.fullmatch(r'[A-Za-z_][A-Za-z_0-9]*',catalog):
         raise ValueError('Invalid catalog identifier')
     silver, versions, silver_load_id = snapshot_silver(spark,catalog)
+    from chicago_taxi.geography.storage import reference_for_silver
+    reference, reference_version=reference_for_silver(spark,catalog,silver_load_id)
+    if reference is not None:
+        silver['ref_community_area']=reference
+        versions['ref_community_area']=reference_version
     load_id = uuid.uuid4().hex
     marts = build_marts(silver,load_id)
     summary = reconcile(marts,silver)
+    schemas=dict(SCHEMAS)
+    if 'mart_area_map_daily' in marts:
+        schemas['mart_area_map_daily']=MAP_SCHEMA
     for name, frame in marts.items():
         target = catalog+'.gold.'+name
-        spark.sql(f'CREATE TABLE IF NOT EXISTS {target} ({SCHEMAS[name]}) USING DELTA')
+        spark.sql(f'CREATE TABLE IF NOT EXISTS {target} ({schemas[name]}) USING DELTA')
         frame.write.format('delta').mode('overwrite').saveAsTable(target)
     # Separate table transactions: hold reporting until this completed audit is present.
     audit = spark.createDataFrame([(load_id,silver_load_id,json.dumps(versions,sort_keys=True),summary['fact_rows'],summary['quarantined_rows'])],

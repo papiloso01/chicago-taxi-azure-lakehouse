@@ -18,3 +18,5 @@ KEYS = {
  'mart_company_payment_daily': ['trip_date','company_key','payment_type_key'],
  'mart_distance_extremes': ['trip_date','extreme_type','trip_id'],
 }
+
+MAP_SCHEMA = SCHEMAS['mart_area_demand_daily'].removesuffix(', gold_load_id STRING')+', geometry_geojson STRING, map_latitude DOUBLE, map_longitude DOUBLE, reference_run_id STRING, gold_load_id STRING'

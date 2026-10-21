@@ -1,7 +1,7 @@
 {
   "version": 1,
   "layer": "gold",
-  "status": "one_day_cloud_test_passed",
+  "status": "five_month_cloud_test_passed",
   "source": "completed silver snapshot with pinned Delta versions",
   "publication": "full snapshots; completed reporting_loads audit and matching gold_load_id required; separate transactions",
   "tables": [
@@ -63,6 +63,17 @@
       "key": "gold_load_id",
       "grain": "one completed gold publication",
       "schema_sql": "gold_load_id STRING, silver_load_id STRING, silver_versions_json STRING, fact_rows BIGINT, quarantined_rows BIGINT, completed_at_utc TIMESTAMP"
+    },
+    {
+      "name": "chicago_taxi_dev.gold.mart_area_map_daily",
+      "format": "delta",
+      "key": [
+        "trip_date",
+        "area_role",
+        "area_key"
+      ],
+      "grain": "date + role + known community area; label point is not a trip coordinate",
+      "schema_sql": "trip_date DATE, area_role STRING, area_key INT, area_id INT, area_name STRING, is_unknown BOOLEAN, trip_count BIGINT, revenue_trip_count BIGINT, known_revenue_usd DECIMAL(28,2),\ndistance_trip_count BIGINT, identified_taxi_trip_count BIGINT, total_km DECIMAL(28,6), avg_known_trip_total_usd DECIMAL(22,6),\navg_known_trip_km DECIMAL(22,6), shortest_positive_trip_km DECIMAL(18,6), longest_trip_km DECIMAL(18,6),\nrevenue_coverage DOUBLE, distance_coverage DOUBLE, taxi_identity_coverage DOUBLE, geometry_geojson STRING, map_latitude DOUBLE, map_longitude DOUBLE, reference_run_id STRING, gold_load_id STRING"
     }
   ],
   "metric_rules": {
@@ -72,5 +83,6 @@
     "areas": "One role at a time for totals; pickup + dropoff doubles trip population",
     "gender": "Unavailable; do not infer",
     "quarantine": "Excluded from gold metrics, retained in audit counts"
-  }
+  },
+  "map_status": "implemented_pending_cloud_test"
 }

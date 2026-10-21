@@ -1,7 +1,7 @@
 {
   "version": 1,
   "layer": "silver",
-  "status": "one_day_cloud_test_passed",
+  "status": "five_month_cloud_test_passed",
   "publication": "full snapshot; independent Delta transactions; completed warehouse_loads audit required",
   "time_semantics": "Chicago local TIMESTAMP_NTZ; no inferred UTC instant",
   "tables": [
@@ -60,6 +60,27 @@
       "key": "silver_load_id",
       "grain": "one completed rebuild",
       "schema_sql": "silver_load_id STRING, bronze_version BIGINT, input_rows BIGINT, fact_rows BIGINT, quarantined_rows BIGINT, completed_at_utc TIMESTAMP"
+    },
+    {
+      "name": "chicago_taxi_dev.silver.ref_community_area",
+      "format": "delta",
+      "key": "area_id",
+      "grain": "one current authoritative area",
+      "schema_sql": "area_key INT, area_id INT, area_name STRING, geometry_geojson STRING, map_latitude DOUBLE, map_longitude DOUBLE, source_run_id STRING, source_sha256 STRING"
+    },
+    {
+      "name": "chicago_taxi_dev.silver.community_area_loads",
+      "format": "delta",
+      "key": "source_run_id",
+      "grain": "one completed reference publication",
+      "schema_sql": "source_run_id STRING, source_sha256 STRING, reference_version BIGINT, reference_rows BIGINT, source_extracted_at_utc TIMESTAMP, completed_at_utc TIMESTAMP"
+    },
+    {
+      "name": "chicago_taxi_dev.silver.warehouse_geography",
+      "format": "delta",
+      "key": "silver_load_id",
+      "grain": "one reference version bound to a silver build",
+      "schema_sql": "silver_load_id STRING, reference_version BIGINT"
     }
   ],
   "foreign_keys": [
@@ -87,5 +108,6 @@
       "source": "fact_trip.dropoff_area_key",
       "target": "dim_community_area.area_key"
     }
-  ]
+  ],
+  "geography_status": "implemented_pending_cloud_test"
 }

@@ -50,7 +50,7 @@ def clean(bronze):
     return df
 
 
-def build_tables(bronze):
+def build_tables(bronze, community_areas=None):
     df = clean(bronze)
     valid = df.filter(F.size('quality_issues') == 0)
     rejected = df.filter(F.size('quality_issues') > 0).select('trip_id','raw_payload','quality_issues','landing_run_id','payload_sha256','extracted_at_utc')
@@ -70,8 +70,14 @@ def build_tables(bronze):
     dims['dim_date'] = dates.select('*',F.year('calendar_date').alias('year'),F.month('calendar_date').alias('month'),
         F.dayofmonth('calendar_date').alias('day'),F.dayofweek('calendar_date').alias('day_of_week'))
     areas = valid.select(F.col('pickup_area_key').alias('area_key')).union(valid.select(F.col('dropoff_area_key').alias('area_key'))).distinct()
-    dims['dim_community_area'] = areas.select('area_key',F.when(F.col('area_key') != 0,F.col('area_key')).alias('area_id'),
-        F.lit(None).cast('string').alias('area_name'),(F.col('area_key') == 0).alias('is_unknown'))
+    if community_areas is None:
+        area_names = areas.withColumn('area_name',F.lit(None).cast('string'))
+    else:
+        area_names = areas.join(community_areas.select('area_key','area_name'),'area_key','left')
+        if area_names.filter((F.col('area_key')!=0) & F.col('area_name').isNull()).limit(1).count():
+            raise ValueError('Community reference is incomplete for observed trips')
+    dims['dim_community_area'] = area_names.select('area_key',F.when(F.col('area_key') != 0,F.col('area_key')).alias('area_id'),
+        'area_name',(F.col('area_key') == 0).alias('is_unknown'))
     return dict(fact_trip=fact, quarantine_trip=rejected, **dims)
 
 
@@ -101,7 +107,9 @@ def load_warehouse(spark, catalog='chicago_taxi_dev'):
     version = int(spark.sql('DESCRIBE HISTORY '+source).select('version').orderBy(F.desc('version')).first()[0])
     # Pin the source snapshot for every action, including separate table writes.
     bronze = spark.sql(f'SELECT * FROM {source} VERSION AS OF {version}')
-    tables = build_tables(bronze)
+    from chicago_taxi.geography.storage import published_reference, record_geography
+    reference, reference_version = published_reference(spark,catalog)
+    tables = build_tables(bronze,reference)
     summary = validate_tables(tables,bronze.count())
     load_id = uuid.uuid4().hex
     # This is a full current-snapshot warehouse. Each table publishes atomically, but the group
@@ -110,6 +118,7 @@ def load_warehouse(spark, catalog='chicago_taxi_dev'):
         target = catalog+'.silver.'+name
         spark.sql(f'CREATE TABLE IF NOT EXISTS {target} ({SCHEMAS[name]}) USING DELTA')
         tables[name].write.format('delta').mode('overwrite').saveAsTable(target)
+    record_geography(spark,catalog,load_id,reference_version)
     audit = spark.createDataFrame([(load_id, version, summary['input_rows'],summary['fact_rows'],summary['quarantined_rows'])],
         'silver_load_id string, bronze_version long, input_rows long, fact_rows long, quarantined_rows long').withColumn('completed_at_utc',F.current_timestamp())
     audit.write.format('delta').mode('append').saveAsTable(catalog+'.silver.warehouse_loads')

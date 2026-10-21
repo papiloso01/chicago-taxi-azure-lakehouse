@@ -17,3 +17,10 @@ tables:
     fields: [landing_run_id, extracted_rows, distinct_rows, loaded_at_utc]
     transaction: separate from trip merge; repaired on replay
     status: one_day_cloud_test_passed
+
+  - name: chicago_taxi_dev.bronze.community_area_snapshots
+    format: delta
+    natural_key: [source_run_id, area_id]
+    grain: one original community record per immutable reference run
+    fields: [source_run_id, area_id, raw_payload, payload_sha256]
+    status: implemented_pending_cloud_test
