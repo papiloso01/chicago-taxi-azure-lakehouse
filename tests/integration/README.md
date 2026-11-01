@@ -12,7 +12,7 @@ Run from the repo root. These commands work in Windows PowerShell too, provided 
 
 ## Add a data source
 
-1. Add its logical name, expected production URL, schema path and named case routes to `tests/fixtures/sources.json`.
+1. Add its logical name, expected production URL, schema path and named case routes to `tests/fixtures/sources.json`. Pagination defaults to `$limit=1000`; override `pagination.limit_parameter` / `pagination.page_size`, or use `pagination: null`. See [the handover guide](../README.md).
 2. Add a response contract under `tests/fixtures/schemas/`. These JSON Schemas describe the raw source response, not Spark warehouse schemas. Allow extra fields for additive changes; model fields relevant to the adapter explicitly. Domain checks remain in the production transformations.
 3. Put synthetic response bodies under `wiremock/__files/<source>/` and request rules under `wiremock/mappings/`. Each case has a unique route, preventing collisions as sources grow. Use exact query matchers for pagination. Never include credentials or personal data.
 4. Add adapter tests using `source_fetch('<source>', '<case>')`. This redirects only the registered source endpoint, preserves query parameters, and rejects unexpected endpoints before making network requests. It does not validate responses itself, so malformed payloads still exercise production error handling.

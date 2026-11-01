@@ -2,6 +2,8 @@
 
 These tests exercise production PySpark DataFrame transformations using small, deterministic datasets. No Azure account, Databricks cluster, live API or WireMock server is required for transformation validation.
 
+See [the test handover guide](../README.md) for environment overrides and statement/branch coverage.
+
 ## Responsibilities
 
 | Suite | Executes | Checks |

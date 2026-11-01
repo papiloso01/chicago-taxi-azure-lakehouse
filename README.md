@@ -58,6 +58,8 @@ See [architecture](docs/architecture.md), [Azure setup](docs/azure_setup.md),
 
 ## Local checks (Windows CMD)
 
+See the [test handover guide](tests/README.md) for adding sources, environment overrides and coverage.
+
 Use Python 3.12 for alignment with the currently selected Databricks Runtime 16.4 LTS.
 Serverless has its own managed environment; inspect its Python/Spark versions separately.
 

@@ -1,0 +1,4 @@
+{
+  "catalog": "chicago_taxi_dev",
+  "linked_service": "ls_databricks_serverless_dev"
+}

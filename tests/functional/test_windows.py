@@ -4,11 +4,17 @@ from chicago_taxi.ingestion.windows import daily_window, year_window, weather_wi
 
 
 def test_daily_uses_chicago_date_not_utc_date():
-    assert daily_window(datetime(2026, 1, 2, 2, tzinfo=timezone.utc)) == ("2025-12-31", "2026-01-01")
+    assert daily_window(datetime(2026, 1, 2, 2, tzinfo=timezone.utc)) == (
+        "2025-12-31",
+        "2026-01-01",
+    )
 
 
 def test_leap_day_window():
-    assert daily_window(datetime(2024, 3, 1, 12, tzinfo=timezone.utc)) == ("2024-02-29", "2024-03-01")
+    assert daily_window(datetime(2024, 3, 1, 12, tzinfo=timezone.utc)) == (
+        "2024-02-29",
+        "2024-03-01",
+    )
 
 
 def test_naive_clock_rejected():

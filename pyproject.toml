@@ -10,12 +10,28 @@ requires-python = ">=3.12"
 dependencies = ["tzdata>=2024.1", "shapely>=2.0,<3"]
 
 [project.optional-dependencies]
-test = ["pytest>=8,<9", "PyYAML>=6,<7", "jsonschema>=4.23,<5"]
+test = ["pytest>=8,<9", "PyYAML>=6,<7", "jsonschema>=4.23,<5", "coverage>=7.10,<8"]
 
 spark-test = ["pyspark>=3.5.3,<3.6"]
+dev = ["ruff==0.17.3"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests/functional", "tests/integration", "tests/etl_validation", "tests/e2e", "tests/delta_integration"]
+
+[tool.coverage.run]
+branch = true
+source = ["src/chicago_taxi"]
+
+[tool.coverage.report]
+include_namespace_packages = true
+show_missing = true
+skip_empty = true
+
+[tool.coverage.paths]
+source = ["src/chicago_taxi", "*/src/chicago_taxi"]
+
+[tool.ruff]
+line-length = 100

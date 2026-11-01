@@ -9,8 +9,9 @@
       "invalid": "/fixtures/taxi_trips/invalid",
       "retry": "/fixtures/taxi_trips/retry"
     },
-    "query_parameters": {
-      "$limit": "2"
+    "query_parameters": {},
+    "pagination": {
+      "page_size": 2
     }
   },
   "community_areas": {
@@ -20,8 +21,10 @@
       "happy": "/fixtures/community_areas/happy"
     },
     "query_parameters": {
-      "$limit": "1000",
       "$order": "area_num_1"
+    },
+    "pagination": {
+      "page_size": 1000
     }
   }
 }
