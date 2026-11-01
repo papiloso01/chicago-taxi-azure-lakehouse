@@ -87,3 +87,13 @@ def test_empty_window_is_success_with_zero_pages(tmp_path):
 @pytest.mark.parametrize('start,end',[('2023-01-01','2023-01-02'),('2025-01-02','2025-01-01')])
 def test_invalid_source_window(start,end):
     with pytest.raises(ValueError):list(pages(start,end))
+
+
+@pytest.mark.parametrize('status', [429, 503])
+def test_http_retry_limit_raises_after_five_attempts(status):
+    error = HTTPError('https://example.invalid', status, 'transient', {}, None)
+    with patch('chicago_taxi.ingestion.taxi_api.urlopen', side_effect=error) as call, patch('chicago_taxi.ingestion.taxi_api.time.sleep') as sleep:
+        with pytest.raises(HTTPError):
+            request_rows('https://example.invalid')
+        assert call.call_count == 5
+        assert [entry.args[0] for entry in sleep.call_args_list] == [1, 2, 4, 8]

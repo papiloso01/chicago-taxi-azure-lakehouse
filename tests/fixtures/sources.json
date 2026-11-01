@@ -8,6 +8,11 @@
       "forbidden": "/fixtures/taxi_trips/forbidden",
       "malformed": "/fixtures/taxi_trips/malformed",
       "invalid": "/fixtures/taxi_trips/invalid"
+    },
+    "query_parameters": {
+      "$limit": "2",
+      "$order": "trip_id ASC",
+      "$where": "trip_start_timestamp >= '2025-01-01T00:00:00' AND trip_start_timestamp < '2025-01-02T00:00:00'"
     }
   },
   "community_areas": {
@@ -15,6 +20,10 @@
     "schema": "schemas/community_areas.json",
     "cases": {
       "happy": "/fixtures/community_areas/happy"
+    },
+    "query_parameters": {
+      "$limit": "1000",
+      "$order": "area_num_1"
     }
   }
 }

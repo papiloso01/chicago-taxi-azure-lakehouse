@@ -3,11 +3,14 @@
     "method": "GET",
     "urlPath": "/fixtures/taxi_trips/happy",
     "queryParameters": {
-      "$where": {
-        "contains": "trip_id > 'b'"
-      },
       "$limit": {
         "equalTo": "2"
+      },
+      "$order": {
+        "equalTo": "trip_id ASC"
+      },
+      "$where": {
+        "equalTo": "trip_start_timestamp >= '2025-01-01T00:00:00' AND trip_start_timestamp < '2025-01-02T00:00:00'"
       }
     }
   },
@@ -16,6 +19,6 @@
     "headers": {
       "Content-Type": "application/json"
     },
-    "bodyFileName": "taxi_trips/last.json"
+    "bodyFileName": "taxi_trips/taxi_trips_response.json"
   }
 }

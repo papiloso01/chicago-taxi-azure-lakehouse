@@ -20,6 +20,10 @@ Run from the repo root. These commands work in Windows PowerShell too, provided 
 
 One session owns one loopback WireMock process on a dynamically allocated port. Requests and scenarios reset before every test; unmatched requests fail the test. Do not share mutable scenario state between tests. The managed process is terminated after the suite. No external shared `--wiremock-url` is offered: isolation avoids tests resetting another developer's or CI worker's mappings.
 
-Current cases cover taxi pagination, HTTP 429 recovery, permanent 403 without retry, malformed responses and invalid rows without a success manifest, plus the 77-area community reference ingestion. Fixtures are synthetic; schema tests do not detect changes at the live provider. Live contract monitoring is separate future work.
+Request mappings use `get_<source>` names; response files use `<source>_response` names, with descriptive case suffixes. They are separate JSON files, not executable Databricks notebooks. Query parameters explicitly match limits, ordering, dates and pagination cursors.
+
+The community HTTP fixture contains one area. Its raw response schema checks individual record structure; the existing functional reference tests still generate all 77 areas to validate production completeness. The HTTP suite no longer claims to test a complete community extraction.
+
+Current cases cover taxi pagination, HTTP 429 recovery, permanent 403 without retry, malformed responses and invalid rows without a success manifest, plus a single-record community HTTP response. Fixtures are synthetic; schema tests do not detect changes at the live provider. Live contract monitoring is separate future work.
 
 References: https://wiremock.org/docs/standalone/java-jar/ and https://wiremock.org/docs/stateful-behaviour/

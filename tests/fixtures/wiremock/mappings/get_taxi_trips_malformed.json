@@ -1,7 +1,7 @@
 {
   "request": {
     "method": "GET",
-    "urlPath": "/fixtures/taxi_trips/happy",
+    "urlPath": "/fixtures/taxi_trips/malformed",
     "queryParameters": {
       "$limit": {
         "equalTo": "2"
@@ -10,7 +10,7 @@
         "equalTo": "trip_id ASC"
       },
       "$where": {
-        "doesNotMatch": ".*trip_id >.*"
+        "equalTo": "trip_start_timestamp >= '2025-01-01T00:00:00' AND trip_start_timestamp < '2025-01-02T00:00:00'"
       }
     }
   },
@@ -19,6 +19,6 @@
     "headers": {
       "Content-Type": "application/json"
     },
-    "bodyFileName": "taxi_trips/first.json"
+    "bodyFileName": "taxi_trips/taxi_trips_malformed_response.json"
   }
 }

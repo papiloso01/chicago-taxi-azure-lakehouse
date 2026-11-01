@@ -16,6 +16,6 @@
     "headers": {
       "Content-Type": "application/json"
     },
-    "bodyFileName": "community_areas/all.json"
+    "bodyFileName": "community_areas/community_areas_response.json"
   }
 }

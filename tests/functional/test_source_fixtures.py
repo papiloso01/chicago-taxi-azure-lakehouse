@@ -18,9 +18,13 @@ def test_registered_source_contracts(fixtures_dir, source_registry):
             matching = [m for m in mappings if m['request']['urlPath'] == route]
             assert matching, (source, case)
             for mapping in matching:
+                # Every case declares its limit/filter contract explicitly.
+                assert mapping['request']['queryParameters']
+                assert '$limit' in mapping['request']['queryParameters']
                 payload = json.loads((fixtures_dir / 'wiremock/__files' / mapping['response']['bodyFileName']).read_text())
                 if case == 'happy':
-                    # An empty final taxi page is valid; reference snapshots require all 77 areas.
+                    # Raw response contracts allow small examples and empty final pages.
+                    # Production reference completeness is checked separately.
                     validator.validate(payload)
                 elif case == 'invalid':
                     with pytest.raises(ValidationError):

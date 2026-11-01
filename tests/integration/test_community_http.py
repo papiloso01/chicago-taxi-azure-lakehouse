@@ -1,7 +1,18 @@
-"""Community reference ingestion through real HTTP and file-backed responses."""
-from chicago_taxi.geography.community_areas import extract, read_snapshot
+"""One response example is sufficient to test the community HTTP adapter.
+
+The separate functional tests enforce the production 77-area snapshot rule.
+"""
+import json
+from urllib.parse import urlencode
+from jsonschema import Draft202012Validator
 
 
-def test_http_reference_to_validated_snapshot(tmp_path, source_fetch):
-    folder = extract(tmp_path, fetch=source_fetch('community_areas'))
-    assert read_snapshot(folder)[0]['rows'] == 77
+def test_http_reference_response(source_fetch, source_registry, fixtures_dir):
+    config = source_registry['community_areas']
+    url = config['source_url'] + '?' + urlencode(config['query_parameters'])
+    rows = source_fetch('community_areas')(url)
+    schema = json.loads((fixtures_dir / config['schema']).read_text())
+    Draft202012Validator(schema).validate(rows)
+    assert len(rows) == 1
+    assert rows[0]['area_num_1'] == '1'
+    assert rows[0]['the_geom']['type'] == 'Polygon'
