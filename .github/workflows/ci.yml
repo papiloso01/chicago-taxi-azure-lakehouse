@@ -10,7 +10,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        suite: [functional, integration, etl_validation, e2e]
+        suite: [functional, integration, etl_validation, e2e, delta_integration]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -24,6 +24,9 @@ jobs:
       - name: Download pinned WireMock
         if: matrix.suite == 'integration'
         run: python tools/download_wiremock.py
+      - name: Download pinned Delta test JARs
+        if: matrix.suite == 'delta_integration'
+        run: python tools/download_delta.py
       - run: python tools/validate_metadata.py
       - name: Run suite
         shell: bash

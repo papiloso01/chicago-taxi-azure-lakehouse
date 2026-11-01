@@ -6,6 +6,7 @@ import pytest
 
 def pytest_addoption(parser):
     parser.addoption('--fixtures-dir', default=str(Path(__file__).parent / 'fixtures'))
+    parser.addoption('--delta-jars-dir', default='.tools/delta', help='Pinned Delta test JAR folder')
     parser.addoption('--wiremock-jar', default=None, help='Pinned standalone JAR (integration tests only)')
 
 
@@ -20,3 +21,5 @@ def fixtures_dir(pytestconfig):
 @pytest.fixture(scope='session')
 def source_registry(fixtures_dir):
     return json.loads((fixtures_dir / 'sources.json').read_text(encoding='utf-8'))
+
+pytest_plugins = ['tests.support.fixtures']

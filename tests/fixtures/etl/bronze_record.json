@@ -1,0 +1,7 @@
+{
+  "trip_id": "a",
+  "fare": "12.50",
+  "mystery": {
+    "nested": 42
+  }
+}

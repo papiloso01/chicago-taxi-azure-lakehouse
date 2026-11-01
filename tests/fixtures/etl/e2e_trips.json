@@ -1,0 +1,17 @@
+[
+  {
+    "trip_id": "a",
+    "taxi_id": "vehicle",
+    "trip_start_timestamp": "2025-01-01T12:00:00",
+    "trip_miles": "1",
+    "trip_total": "10",
+    "pickup_community_area": "8",
+    "dropoff_community_area": "9"
+  },
+  {
+    "trip_id": "b",
+    "trip_start_timestamp": "broken",
+    "trip_miles": "3",
+    "trip_total": "20"
+  }
+]

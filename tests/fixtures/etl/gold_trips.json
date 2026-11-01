@@ -1,0 +1,47 @@
+[
+  {
+    "trip_id": "a",
+    "taxi": "A",
+    "revenue": "10",
+    "km": "1",
+    "pickup": 8,
+    "dropoff": 0,
+    "day": 1
+  },
+  {
+    "trip_id": "b",
+    "taxi": "B",
+    "revenue": "20",
+    "km": "5",
+    "pickup": 8,
+    "dropoff": 9,
+    "day": 1
+  },
+  {
+    "trip_id": "c",
+    "taxi": "B",
+    "revenue": null,
+    "km": "5",
+    "pickup": 0,
+    "dropoff": 8,
+    "day": 1
+  },
+  {
+    "trip_id": "d",
+    "taxi": null,
+    "revenue": "20",
+    "km": "0",
+    "pickup": 9,
+    "dropoff": 8,
+    "day": 1
+  },
+  {
+    "trip_id": "e",
+    "taxi": "A",
+    "revenue": null,
+    "km": null,
+    "pickup": 0,
+    "dropoff": 0,
+    "day": 2
+  }
+]
