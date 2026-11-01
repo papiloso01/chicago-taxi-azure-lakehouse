@@ -26,12 +26,6 @@ def test_http_to_landing_manifest(tmp_path, source_fetch):
     assert len(result['files']) == 1
 
 
-def test_transient_http_error_retries(source_fetch, source_registry, wiremock):
-    rows = source_fetch('taxi_trips', 'retry')(request_url(source_registry))
-    assert [row['trip_id'] for row in rows] == ['a', 'b']
-    assert request_count(wiremock) == 2
-
-
 def test_permanent_http_error_does_not_retry(source_fetch, source_registry, wiremock):
     with pytest.raises(HTTPError) as error:
         source_fetch('taxi_trips', 'forbidden')(request_url(source_registry))

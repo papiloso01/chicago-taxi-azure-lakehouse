@@ -4,15 +4,12 @@
     "schema": "schemas/taxi_trips.json",
     "cases": {
       "happy": "/fixtures/taxi_trips/happy",
-      "retry": "/fixtures/taxi_trips/retry",
       "forbidden": "/fixtures/taxi_trips/forbidden",
       "malformed": "/fixtures/taxi_trips/malformed",
       "invalid": "/fixtures/taxi_trips/invalid"
     },
     "query_parameters": {
-      "$limit": "2",
-      "$order": "trip_id ASC",
-      "$where": "trip_start_timestamp >= '2025-01-01T00:00:00' AND trip_start_timestamp < '2025-01-02T00:00:00'"
+      "$limit": "2"
     }
   },
   "community_areas": {

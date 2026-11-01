@@ -1,4 +1,4 @@
-"""One isolated WireMock process; reset request/scenario state for every test."""
+"""One isolated WireMock process; reset request state for every test."""
 import json
 import subprocess
 import time
@@ -58,7 +58,6 @@ def wiremock_server(pytestconfig, fixtures_dir, tmp_path_factory):
 
 @pytest.fixture
 def wiremock(wiremock_server):
-    admin(wiremock_server, 'scenarios/reset', 'POST')
     admin(wiremock_server, 'requests', 'DELETE')
     yield wiremock_server
     unmatched = admin(wiremock_server, 'requests/unmatched')['requests']

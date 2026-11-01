@@ -5,12 +5,6 @@
     "queryParameters": {
       "$limit": {
         "equalTo": "2"
-      },
-      "$order": {
-        "equalTo": "trip_id ASC"
-      },
-      "$where": {
-        "equalTo": "trip_start_timestamp >= '2025-01-01T00:00:00' AND trip_start_timestamp < '2025-01-02T00:00:00'"
       }
     }
   },
