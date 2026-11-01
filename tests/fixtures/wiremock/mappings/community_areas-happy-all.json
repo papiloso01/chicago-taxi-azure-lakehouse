@@ -1,0 +1,21 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPath": "/fixtures/community_areas/happy",
+    "queryParameters": {
+      "$limit": {
+        "equalTo": "1000"
+      },
+      "$order": {
+        "equalTo": "area_num_1"
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "bodyFileName": "community_areas/all.json"
+  }
+}

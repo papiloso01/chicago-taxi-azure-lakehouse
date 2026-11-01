@@ -1,0 +1,20 @@
+{
+  "taxi_trips": {
+    "source_url": "https://data.cityofchicago.org/resource/ajtu-isnz.json",
+    "schema": "schemas/taxi_trips.json",
+    "cases": {
+      "happy": "/fixtures/taxi_trips/happy",
+      "retry": "/fixtures/taxi_trips/retry",
+      "forbidden": "/fixtures/taxi_trips/forbidden",
+      "malformed": "/fixtures/taxi_trips/malformed",
+      "invalid": "/fixtures/taxi_trips/invalid"
+    }
+  },
+  "community_areas": {
+    "source_url": "https://data.cityofchicago.org/resource/igwz-8jzy.json",
+    "schema": "schemas/community_areas.json",
+    "cases": {
+      "happy": "/fixtures/community_areas/happy"
+    }
+  }
+}

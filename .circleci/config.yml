@@ -15,9 +15,11 @@ jobs:
     - image: cimg/python:3.12
     steps:
     - checkout
+    - run: sudo apt-get update && sudo apt-get install -y openjdk-17-jre-headless
+    - run: python tools/download_wiremock.py
     - run: python -m pip install -e '.[test]'
     - run: python tools/validate_metadata.py
-    - run: python -m pytest tests/integration -v --junitxml=test-results/integration.xml
+    - run: python -m pytest tests/integration -v --wiremock-jar .tools/wiremock.jar --junitxml=test-results/integration.xml
     - store_test_results:
         path: test-results
   etl_validation:

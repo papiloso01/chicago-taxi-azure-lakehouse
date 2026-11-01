@@ -21,8 +21,18 @@ jobs:
           distribution: temurin
           java-version: '17'
       - run: python -m pip install -e '.[test,spark-test]'
+      - name: Download pinned WireMock
+        if: matrix.suite == 'integration'
+        run: python tools/download_wiremock.py
       - run: python tools/validate_metadata.py
-      - run: python -m pytest tests/${{ matrix.suite }} -v --junitxml=test-results/${{ matrix.suite }}.xml
+      - name: Run suite
+        shell: bash
+        run: |
+          args=()
+          if [ "${{ matrix.suite }}" = "integration" ]; then
+            args+=(--wiremock-jar .tools/wiremock.jar)
+          fi
+          python -m pytest tests/${{ matrix.suite }} -v "${args[@]}" --junitxml=test-results/${{ matrix.suite }}.xml
       - uses: actions/upload-artifact@v4
         if: always()
         with:
