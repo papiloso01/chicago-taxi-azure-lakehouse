@@ -1,0 +1,18 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPath": "/fixtures/taxi_trips/forbidden",
+    "queryParameters": {
+      "$limit": {
+        "equalTo": "2"
+      }
+    }
+  },
+  "response": {
+    "status": 403,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "bodyFileName": "taxi_trips/taxi_trips_forbidden_response.json"
+  }
+}

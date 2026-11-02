@@ -229,3 +229,6 @@ data/
 *.tfstate
 *.tfstate.*
 *.tfvars
+
+# Downloaded test tools
+.tools/

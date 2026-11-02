@@ -1,29 +1,19 @@
-"""Real HTTP adapter against a fixture community API; no live service required in CI."""
+"""One response example is sufficient to test the community HTTP adapter.
+
+The separate functional tests enforce the production 77-area snapshot rule.
+"""
+
 import json
-import threading
-from http.server import BaseHTTPRequestHandler,ThreadingHTTPServer
-from urllib.parse import parse_qs,urlparse
-from chicago_taxi.ingestion.taxi_api import request_rows
-from chicago_taxi.geography.community_areas import extract,read_snapshot
+from urllib.parse import urlencode
+from jsonschema import Draft202012Validator
 
 
-def test_http_reference_to_validated_snapshot(tmp_path):
-    class Handler(BaseHTTPRequestHandler):
-        def do_GET(self):
-            assert parse_qs(urlparse(self.path).query)['$limit']==['1000']
-            data=[]
-            for area in range(1,78):
-                x=-88+area/1000
-                data.append(dict(area_num_1=str(area),community=f'AREA {area}',the_geom=dict(type='Polygon',
-                    coordinates=[[[x,41.7],[x+.0005,41.7],[x+.0005,41.701],[x,41.701],[x,41.7]]])))
-            self.send_response(200);self.send_header('Content-Type','application/json');self.end_headers()
-            self.wfile.write(json.dumps(data).encode())
-        def log_message(self,*args): pass
-    server=ThreadingHTTPServer(('127.0.0.1',0),Handler)
-    thread=threading.Thread(target=server.serve_forever,daemon=True);thread.start()
-    try:
-        def fetch(url,token): return request_rows(f'http://127.0.0.1:{server.server_port}/?'+urlparse(url).query,token)
-        folder=extract(tmp_path,fetch=fetch)
-        assert read_snapshot(folder)[0]['rows']==77
-    finally:
-        server.shutdown();thread.join();server.server_close()
+def test_http_reference_response(source_fetch, source_registry, fixtures_dir):
+    config = source_registry["community_areas"]
+    url = config["source_url"] + "?" + urlencode(config["query_parameters"])
+    rows = source_fetch("community_areas")(url)
+    schema = json.loads((fixtures_dir / config["schema"]).read_text())
+    Draft202012Validator(schema).validate(rows)
+    assert len(rows) == 1
+    assert rows[0]["area_num_1"] == "1"
+    assert rows[0]["the_geom"]["type"] == "Polygon"

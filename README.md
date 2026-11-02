@@ -53,10 +53,12 @@ See [architecture](docs/architecture.md), [Azure setup](docs/azure_setup.md),
 | `metadata/` | Versioned source definitions and reporting rules |
 | `sql/mysql/migrations/` | Local database bootstrap and future reporting migrations |
 | `infrastructure/` | Local Docker; future reviewed Azure infrastructure definitions |
-| `tests/` | Functional checks now; integration, ETL validation and E2E suites to follow |
+| `tests/` | Functional, HTTP integration, Spark ETL validation, offline E2E and local Delta integration |
 | `dashboards/` | Future versioned BI definitions |
 
 ## Local checks (Windows CMD)
+
+See the [test handover guide](tests/README.md) for adding sources, environment overrides and coverage.
 
 Use Python 3.12 for alignment with the currently selected Databricks Runtime 16.4 LTS.
 Serverless has its own managed environment; inspect its Python/Spark versions separately.
@@ -64,13 +66,18 @@ Serverless has its own managed environment; inspect its Python/Spark versions se
 ```cmd
 python -m venv .venv
 .venv\Scripts\activate
-python -m pip install -e ".[test]"
-python -m pytest tests/functional tests/integration -v
+python -m pip install -e ".[test,spark-test]"
+python tools/download_wiremock.py
+python tools/download_delta.py
+python -m pytest tests -v --wiremock-jar .tools/wiremock.jar
 python tools/validate_metadata.py
 ```
 
-No Azure credentials are needed for these checks. GitHub Actions and CircleCI run this foundation
-suites; the integration suite uses a loopback HTTP fixture API. Delta ETL/E2E suites remain planned.
+Java 17 must be available on PATH. No Azure credentials are needed. GitHub Actions and CircleCI
+are configured with five suites; HTTP integration uses WireMock, transformation tests use local
+PySpark and the separate Delta suite executes real local storage operations.
+See [ETL test coverage and limitations](tests/etl_validation/README.md) and
+[HTTP fixture setup](tests/integration/README.md).
 
 ## Reporting limits
 

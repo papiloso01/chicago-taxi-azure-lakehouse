@@ -1,0 +1,19 @@
+{
+  "trip_id": "a",
+  "taxi_id": "taxi-A",
+  "company": "  Yellow   Cab ",
+  "payment_type": "credit card",
+  "trip_start_timestamp": "2025-01-01T01:00:00.000",
+  "trip_end_timestamp": "2025-01-01T01:15:00.000",
+  "trip_seconds": "720",
+  "trip_miles": "2.5",
+  "fare": "12.50",
+  "tips": "2.25",
+  "tolls": "0",
+  "extras": "0",
+  "trip_total": "14.75",
+  "pickup_community_area": "8",
+  "dropoff_community_area": null,
+  "landing_run_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "payload_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+}

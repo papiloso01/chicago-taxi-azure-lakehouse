@@ -1,0 +1,21 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPath": "/fixtures/taxi_trips/retry",
+    "queryParameters": {
+      "$limit": {
+        "equalTo": "2"
+      }
+    }
+  },
+  "response": {
+    "status": 429,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "bodyFileName": "taxi_trips/taxi_trips_rate_limit_response.json"
+  },
+  "scenarioName": "taxi-retry",
+  "requiredScenarioState": "Started",
+  "newScenarioState": "ready"
+}
